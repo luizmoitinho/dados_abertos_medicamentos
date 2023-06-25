@@ -1,7 +1,5 @@
 package entity
 
-import "strings"
-
 /*
 	NOME_PRODUTO
 	DATA_FINALIZACAO_PROCESSO
@@ -28,12 +26,4 @@ type Medicine struct {
 	CompanyHoldingRegistration string
 	RegistrationStatus         string
 	ActiveIngredient           string
-}
-
-func (m *Medicine) NormalizeName() {
-	m.Name = strings.TrimSpace(m.Name)
-	m.Name = strings.Replace(m.Name, "\"", "", -1)
-	m.Name = strings.Replace(m.Name, "(", "", -1)
-	m.Name = strings.Replace(m.Name, ")", "", -1)
-
 }

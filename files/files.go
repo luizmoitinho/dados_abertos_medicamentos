@@ -13,7 +13,10 @@ import (
 )
 
 func ReadCSV(fileName string) (entity.Medicines, error) {
-	var data entity.Medicines
+	var (
+		data               entity.Medicines
+		counterInvalidData = 0
+	)
 
 	f, err := os.Open(fileName)
 	if err != nil {
@@ -22,6 +25,7 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
+	csvReader.Comma = ';'
 	for {
 		rec, err := csvReader.Read()
 		if err == io.EOF {
@@ -29,6 +33,11 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 		}
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		if rec[4] == "" {
+			counterInvalidData++
+			continue
 		}
 
 		item := entity.Medicine{
@@ -51,6 +60,7 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 
 		data = append(data, item)
 	}
+	//log.Printf("Total of invalid data: %d\n", counterInvalidData)
 	return data, nil
 }
 
@@ -63,7 +73,7 @@ func SaveCSV(medicines *entity.Medicines, fileName string) error {
 	defer f.Close()
 
 	for _, medicine := range *medicines {
-		_, err = f.WriteString(fmt.Sprintf("%s,%s,%s,%d,%s,%s,%s,%s,%s,%s\n",
+		_, err = f.WriteString(fmt.Sprintf("%s;%s;%s;%d;%s;%s;%s;%s;%s;%s\n",
 			medicine.Name,
 			medicine.ProcessEndDate,
 			medicine.RegulatoryCategory,
