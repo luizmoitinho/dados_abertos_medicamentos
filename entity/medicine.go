@@ -1,5 +1,7 @@
 package entity
 
+import "time"
+
 /*
 	NOME_PRODUTO
 	DATA_FINALIZACAO_PROCESSO
@@ -12,6 +14,7 @@ package entity
 	SITUACAO_REGISTRO
 	PRINCIPIO_ATIVO
 */
+const dateFormat = "02/01/2006"
 
 type Medicines []Medicine
 
@@ -26,4 +29,9 @@ type Medicine struct {
 	CompanyHoldingRegistration string
 	RegistrationStatus         string
 	ActiveIngredient           string
+}
+
+func (m Medicine) GetTimeDueDate() time.Time {
+	dueDate, _ := time.Parse(dateFormat, m.DueDate)
+	return dueDate
 }

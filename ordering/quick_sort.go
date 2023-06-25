@@ -12,15 +12,8 @@ func partition(medicines *entity.Medicines, low, high int) int {
 	pivot := (*medicines)[high]
 	i := low
 	for j := low; j < high; j++ {
-		currentDueDate, err := time.Parse(dateFormat, (*medicines)[j].DueDate)
-		if err != nil {
-			continue
-		}
-		pivotDueDate, err := time.Parse(dateFormat, pivot.DueDate)
-		if err != nil {
-			continue
-		}
-
+		currentDueDate, _ := time.Parse(dateFormat, (*medicines)[j].DueDate)
+		pivotDueDate, _ := time.Parse(dateFormat, pivot.DueDate)
 		if currentDueDate.Before(pivotDueDate) {
 			(*medicines)[i], (*medicines)[j] = (*medicines)[j], (*medicines)[i] //swap
 			i++
@@ -43,14 +36,8 @@ func partitionInverse(medicines *entity.Medicines, low, high int) int {
 	pivot := (*medicines)[high]
 	i := low
 	for j := low; j < high; j++ {
-		currentDueDate, err := time.Parse(dateFormat, (*medicines)[j].DueDate)
-		if err != nil {
-			continue
-		}
-		pivotDueDate, err := time.Parse(dateFormat, pivot.DueDate)
-		if err != nil {
-			continue
-		}
+		currentDueDate, _ := time.Parse(dateFormat, (*medicines)[j].DueDate)
+		pivotDueDate, _ := time.Parse(dateFormat, pivot.DueDate)
 
 		if currentDueDate.After(pivotDueDate) {
 			(*medicines)[i], (*medicines)[j] = (*medicines)[j], (*medicines)[i] //swap
