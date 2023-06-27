@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	dataset          = "dataset/dados_abertos_medicamentos.csv"
-	dataset_minified = "dataset/dados_abertos_medicamentos_minified.csv"
+	dataset = "dataset/dados_abertos_medicamentos.csv"
 )
 
 func main() {
+	//evaluation.ShellSort()
 	evaluation.QuickSort()
 }
 
@@ -27,10 +27,10 @@ func run() {
 	}
 
 	log.Printf("Ordering data from array with %d length\n", len(medicines))
-	ordering.ShellSort(&medicines, len(medicines))
+	ordering.QuickSort(medicines, 0, len(medicines)-1)
 
 	log.Println("Saving ordered data into another CSV file")
-	files.SaveCSV(&medicines, "results/shellsort.csv")
+	files.SaveCSV(&medicines, "results/quicksort.csv")
 
 	log.Println("Stopping ordering analysis")
 }

@@ -14,7 +14,7 @@ import "time"
 	SITUACAO_REGISTRO
 	PRINCIPIO_ATIVO
 */
-const dateFormat = "02/01/2006"
+const DateFormat = "02/01/2006"
 
 type Medicines []Medicine
 
@@ -22,8 +22,9 @@ type Medicine struct {
 	Name                       string
 	ProcessEndDate             string
 	RegulatoryCategory         string
-	ProductRegistrtationNumber int64
-	DueDate                    string
+	Category                   string
+	ProductRegistrationNumber  int64
+	DueDate                    time.Time
 	ProcessNumber              string
 	TherapeuticClass           string
 	CompanyHoldingRegistration string
@@ -31,7 +32,7 @@ type Medicine struct {
 	ActiveIngredient           string
 }
 
-func (m Medicine) GetTimeDueDate() time.Time {
-	dueDate, _ := time.Parse(dateFormat, m.DueDate)
+func GetTimeDueDate(t string) time.Time {
+	dueDate, _ := time.Parse(DateFormat, t)
 	return dueDate
 }

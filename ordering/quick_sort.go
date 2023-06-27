@@ -1,54 +1,57 @@
 package ordering
 
 import (
-	"time"
-
 	"github.com/luizmoitinho/trabalho_final_aaed/entity"
 )
 
-const dateFormat = "02/01/2006"
+var (
+	Comparacoes = int(0)
+	Troca       = int(0)
+)
 
-func partition(medicines *entity.Medicines, low, high int) int {
-	pivot := (*medicines)[high]
-	i := low
-	for j := low; j < high; j++ {
-		currentDueDate, _ := time.Parse(dateFormat, (*medicines)[j].DueDate)
-		pivotDueDate, _ := time.Parse(dateFormat, pivot.DueDate)
-		if currentDueDate.Before(pivotDueDate) {
-			(*medicines)[i], (*medicines)[j] = (*medicines)[j], (*medicines)[i] //swap
-			i++
-		}
-	}
-	(*medicines)[i], (*medicines)[high] = (*medicines)[high], (*medicines)[i] //swap
-	return i
+func init() {
+	Comparacoes = int(0)
+	Troca = int(0)
 }
 
-func QuickSort(medicines *entity.Medicines, low, high int) {
-	var pivot int
+func partition(medicines entity.Medicines, low, high int) int {
+	pivot := medicines[high]
+	i := low - 1
+	for j := low; j < high; j++ {
+		Comparacoes++
+		if medicines[j].DueDate.Before(pivot.DueDate) {
+			i++
+			medicines[i], medicines[j] = medicines[j], medicines[i] //swap
+			Troca++
+		}
+	}
+	medicines[i+1], medicines[high] = medicines[high], medicines[i+1] //swap
+	Troca++
+	return i + 1
+}
+
+func QuickSort(medicines entity.Medicines, low, high int) {
 	if low < high {
-		pivot = partition(medicines, low, high)
+		pivot := partition(medicines, low, high)
 		QuickSort(medicines, low, pivot-1)
 		QuickSort(medicines, pivot+1, high)
 	}
 }
 
-func partitionInverse(medicines *entity.Medicines, low, high int) int {
-	pivot := (*medicines)[high]
+func partitionInverse(medicines entity.Medicines, low, high int) int {
+	pivot := medicines[high]
 	i := low
 	for j := low; j < high; j++ {
-		currentDueDate, _ := time.Parse(dateFormat, (*medicines)[j].DueDate)
-		pivotDueDate, _ := time.Parse(dateFormat, pivot.DueDate)
-
-		if currentDueDate.After(pivotDueDate) {
-			(*medicines)[i], (*medicines)[j] = (*medicines)[j], (*medicines)[i] //swap
+		if medicines[j].DueDate.After(pivot.DueDate) {
+			medicines[i], medicines[j] = medicines[j], medicines[i] //swap
 			i++
 		}
 	}
-	(*medicines)[i], (*medicines)[high] = (*medicines)[high], (*medicines)[i] //swap
+	medicines[i], medicines[high] = medicines[high], medicines[i] //swap
 	return i
 }
 
-func QuickSortDesc(medicines *entity.Medicines, low, high int) {
+func QuickSortDesc(medicines entity.Medicines, low, high int) {
 	var pivot int
 	if low < high {
 		pivot = partitionInverse(medicines, low, high)

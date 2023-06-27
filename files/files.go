@@ -16,6 +16,7 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 	var (
 		data               entity.Medicines
 		counterInvalidData = 0
+		counter            = 0
 	)
 
 	f, err := os.Open(fileName)
@@ -40,11 +41,16 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 			continue
 		}
 
+		if counter == 1000 {
+			break
+		}
+
 		item := entity.Medicine{
 			Name:                       strings.TrimSpace(rec[0]),
 			ProcessEndDate:             rec[1],
 			RegulatoryCategory:         rec[2],
-			DueDate:                    rec[4],
+			Category:                   rec[3],
+			DueDate:                    entity.GetTimeDueDate(rec[4]),
 			ProcessNumber:              rec[5],
 			TherapeuticClass:           rec[6],
 			CompanyHoldingRegistration: rec[7],
@@ -56,9 +62,10 @@ func ReadCSV(fileName string) (entity.Medicines, error) {
 		if err != nil {
 			return nil, err
 		}
-		item.ProductRegistrtationNumber = value
+		item.ProductRegistrationNumber = value
 
 		data = append(data, item)
+		counter++
 	}
 	//log.Printf("Total of invalid data: %d\n", counterInvalidData)
 	return data, nil
@@ -77,8 +84,8 @@ func SaveCSV(medicines *entity.Medicines, fileName string) error {
 			medicine.Name,
 			medicine.ProcessEndDate,
 			medicine.RegulatoryCategory,
-			medicine.ProductRegistrtationNumber,
-			medicine.DueDate,
+			medicine.ProductRegistrationNumber,
+			medicine.DueDate.Format(entity.DateFormat),
 			medicine.ProcessNumber,
 			medicine.TherapeuticClass,
 			medicine.CompanyHoldingRegistration,
